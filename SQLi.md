@@ -17,9 +17,9 @@ A SQL Injection vulnerability flaw in the login form allows attackers to bypass 
 - There are no requred precondition other than the ability to access the login page.
 
 ## 4 - Reproduction
-#### 1. Open 'https://0a98001e031a862e82fa3da600da00a4.web-security-academy.net/'
+#### - Open 'https://0a98001e031a862e82fa3da600da00a4.web-security-academy.net/'
    
-#### 2. Find the login page and begin testing
+#### - Find the login page and begin testing
 
 Simply fill in the login form and catch the HTTP request via any web proxy.
 
@@ -37,7 +37,7 @@ After fowarded the edited request, we get an **Internal Sever Error**. Simply fr
 
 Essentially turning the middle portion of the query into a string with incorrect synax. This is why after we forwarded our POST request the database threw an error. The user input request is being directly inserted into the backed SQL query, this improper input handling will be easy to exploit.
 
-#### 3. Exploit the Vulnerability
+#### - Exploit the Vulnerability
 
 Now that we have confirmed that the user input is reaching the SQL query directly, we can simply add out own query top the middle of the login statement and comment out anything else we dont want to execute.
 
@@ -57,7 +57,7 @@ Finally we get out new post request that reads -
 
 Simply combining our new boolean test with the inline comment and submit the request...
 
-#### 4. Impact
+## 5. Impact
 
 Once submitted we are granted access through the login page with administative permissions. We are now able to change the email on the newly accessed admin account and do as we please. We can - 
 - Access sensitive data
@@ -67,7 +67,7 @@ Once submitted we are granted access through the login page with administative p
 
 Note * that this injection will simply give you access to the first user account stored in the table. In this case it just so happened to be the administrator. Which was a nice easy way to also gain vertical privilage escilation with no additional effort.
 
-#### 5. Root Cause
+## 6. Root Cause
 
 This vulnerability exists due to the applications use of unsanitized, user-supplied input directly inside of a dynamic SQL query. The login form uses simple string concatenation that can be manipulated easily. 
 
@@ -77,7 +77,7 @@ This vulnerability exists due to the applications use of unsanitized, user-suppl
     
 The input is never validated or patameterized. We can input anything we want and the database will execute it. 
 
-#### 6. Quick Fix 
+## 7. Quick Fix 
 
 Instead of embedding user input into the SQL string, developers must bind paramenters safely.
 
@@ -92,6 +92,6 @@ Note * that this is the simple fix to the problem, there are many more steps tha
 - Enforcing least-privilage database access.
 - Implement proper authentication logic.
   
-#### 7. Ethical Diclaimer
+## 8. Ethical Diclaimer
 
 **All activity performed in a controlled, authorized enviorment. Do not use these techniques on systems you do not own or have explicit permission to test.**
